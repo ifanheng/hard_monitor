@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>硬件实时监控</title>
+    <link href="{{ static_url('dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ static_url('css/dashboard.css') }}" rel="stylesheet">
+    <script src="{{ static_url('js/analogClock.js') }}"></script>
+    {% block head %}{% end %}
+</head>
+
+<body>
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">硬件实时监控</a>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">
+                            系统监控
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/log/">
+                            日志统计
+                        </a>
+                    </li>
+                </ul>
+
+                <!--系统的开机时间-->
+                <div class="col-md-12">
+                    <div class="alert alert-info">开机时间：{{ handler.started }}</div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card text-white bg-dark mb-3">
+                        <div class="card-header">当前时间</div>
+                        <div class="card-body" id="clock"></div>
+                    </div>
+                </div>
+
+                <!--用户登录信息-->
+                <div class="col-md-12">
+                    <div class="card text-white bg-dark mb-3">
+                        <div class="card-header">用户信息</div>
+                        <div class="card-body">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                <tr class="text-primary">
+                                    <th class="text-center" colspan="2">用户登录信息</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for v in handler.users %}
+                                <tr>
+                                    <td class="text-primary">
+                                        登录账号：<br>
+                                        登录终端：<br>
+                                        登录主机：<br>
+                                        登录时间：<br>
+                                    </td>
+                                    <td>
+                                        {{ v['name'] }}<br>
+                                        {{ v['terminal'] }}<br>
+                                        {{ v['host'] }}<br>
+                                        {{ v['started'] }}
+                                    </td>
+                                </tr>
+                                {% end %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h5>{{ data['title'] }}</h5>
+            </div>
+            <!--变化的部分放在数据块中，也就是放在这里-->
+            {% block content %}{% end %}
+
+        </main>
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/lazysizes/4.0.2/lazysizes.min.js"></script>
+<!--导入sockjs-client-->
+<script src="https://cdn.bootcss.com/sockjs-client/1.4.0/sockjs.min.js"></script>
+<!--导入websocket客户端的js文件-->
+<script src="{{ static_url('js/monitor.js') }}"></script>
+<script>
+    AnalogClock("clock", new AnalogClockOption(200, "#eee", "#333"));
+</script>
+{% block foot %}{% end %}
+</body>
+</html>
